@@ -1,0 +1,66 @@
+import numpy as np
+N=3
+
+def funct():
+    print("Enter the elements of the augmented matrix row-wise")
+    a = []
+    for i in range(N):
+        row = []
+        for j in range(N + 1):  # here N+1 cause the columns are like 4
+            val = float(input(f"  Enter element [{i+1}][{j+1}]: "))
+            row.append(val)
+        a.append(row)
+    print()
+    return a
+
+def gauss_elimination(a):
+    for j in range(N - 1):          # pivot column
+        for i in range(j + 1, N):   # rows below the pivot
+            ratio=(a[i][j]/a[j][j])
+            for k in range(N + 1):
+               a[i][k]=a[i][k]-(ratio*a[j][k])
+
+def print_matrix(a, title):
+    print(title)
+    for i in range(N):
+        for j in range(N + 1):
+            print("%.4f" % a[i][j], end="  ")
+
+        print()
+def back_substitution(a):
+    """
+    Solve the upper triangular system using back substitution.
+    Returns the solution vector x.
+    """
+    x = [0.0] * N
+    for i in range(N - 1, -1, -1):
+        s = 0
+        for j in range(i + 1, N):
+            s = s+a[i][j]*x[j]
+        x[i] = (a[i][N]-s)/a[i][i]
+    return x
+
+def print_solution(x):
+    print("Solution:")
+    for i in range(N):
+        print("x[%d] = %.4f" % (i+1, x[i]))
+        
+def main():
+    print("=" * 50)
+    print("     GAUSS ELIMINATION METHOD")
+    print("=" * 50)
+
+    a = funct()
+    print_matrix(a, "Input Augmented Matrix [A|b]:")
+
+    gauss_elimination(a)
+
+    print_matrix(a, "Upper Triangular Matrix:")
+
+    x = back_substitution(a)
+    print_solution(x)
+    print_matrix(a, "Upper Triangular Matrix:")
+    
+    
+if __name__ == "__main__":
+    main()
